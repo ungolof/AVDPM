@@ -1,0 +1,1238 @@
+#============================= - Get final draws - ========================
+## - 1) Discard first 40,000 iterations (burn-in) and thinning every 50
+burn_in <- 40000
+thinning <- 20
+
+seq_bi_thn <- seq((burn_in+thinning), n_iter, thinning)
+
+# - beta regression parameters
+alpha_thn <- alpha[seq_bi_thn,]
+beta_thn <- beta[seq_bi_thn,]
+
+# - gamma frailty parameters
+gamma_star_thn <- gamma_star[seq_bi_thn,]
+
+# - zeta age difference
+z_star_ad_thn <- z_star_ad[seq_bi_thn,]
+z_ad_v_thn <- z_ad_v[seq_bi_thn]
+
+# - zeta oldest male
+z_star_mo_thn <- z_star_mo[seq_bi_thn,]
+
+# - pi mixture weight
+pi_mw_thn <- pi_mw[seq_bi_thn,]
+
+# - mu_theta (parameter of the base distribution)
+mu_gamma_thn <- mu_gamma[seq_bi_thn,]
+
+# - Covariance_theta
+Sigma_gamma_thn <- Sigma_gamma[seq_bi_thn,]
+
+# - psi from stick-breaking procedure
+psi_sbp_thn <- psi_sbp[seq_bi_thn,]
+
+# phi concentration parameter of the Dirichlet Process
+phi_thn <- phi[seq_bi_thn,]
+
+# - Get posterior mean of the parameters
+alpha_post_m <- colMeans(alpha_thn)
+beta_post_m <- colMeans(beta_thn)
+gamma_star_post_m <- colMeans(gamma_star_thn)
+z_star_ad_post_m <- colMeans(z_star_ad_thn)
+z_star_mo_post_m <- colMeans(z_star_mo_thn)
+z_ad_v_post_m <- mean(z_ad_v[seq_bi_thn])
+pi_mw_post_m <- colMeans(pi_mw_thn)
+
+gamma_star_post_m_M <- gamma_star_post_m[seq(1,M*K-1,M)]
+gamma_star_post_m_F <- gamma_star_post_m[seq(2,M*K  ,M)]
+
+library(matrixStats)
+
+plot(c(1:(i-1)), alpha[c(1:(i-1)),1], type='l', ylim=c(-20,0))
+plot(c(1:(i-1)), alpha[c(1:(i-1)),2], type='l', ylim=c(-20,0))
+
+plot(c(1:(i-1)), beta[c(1:(i-1)),1], type='l', ylim=c(0.04,0.20))
+plot(c(1:(i-1)), beta[c(1:(i-1)),2], type='l', ylim=c(0.04,0.30))
+
+## - phi
+plot(c(1:(i-1)), phi[c(1:(i-1)),1], type='l', ylim=c(0,10))
+
+## - gamma* as drawn from the Dirichlet Process
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),1], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),2], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),3], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),4], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),5], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),6], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),7], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),8], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),9], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),10], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),11], type='l')
+plot(c(1:(i-1)), gamma_star[c(1:(i-1)),12], type='l')
+
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),1], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),2], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),3], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),4], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),5], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),6], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),7], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),8], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),9], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),10], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),11], type='l')
+plot(c(1:(i-1)), z_star_ad[c(1:(i-1)),12], type='l')
+
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),1], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),2], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),3], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),4], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),5], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),6], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),7], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),8], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),9], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),10], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),11], type='l')
+plot(c(1:(i-1)), z_star_mo[c(1:(i-1)),12], type='l')
+
+log_abs_z_ad <- log(abs(Z$agediff))
+hist(log_abs_z_ad, breaks=1000)
+plot(density(log_abs_z_ad))
+
+
+# - pi (mixture weights from the Dirichlet Process)
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),1], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),2], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),3], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),4], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),5], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),6], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),7], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),8], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),9], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),10], type='l',ylim=c(0,1))
+plot(c(1:(i-1)), pi_mw[c(1:(i-1)),11], type='l',ylim=c(0,1))
+
+## - Number of clusters and cluster occupancy
+plot(c(1:(i-1)), N_c_tb[c(1:(i-1))], type='l')
+plot(c(1:(i-1)), N_k_tb[c(1:(i-1)),1], type='l', ylim=c(0, sample_size))
+plot(c(1:(i-1)), N_k_tb[c(1:(i-1)),2], type='l', ylim=c(0, sample_size))
+plot(c(1:(i-1)), N_k_tb[c(1:(i-1)),3], type='l', ylim=c(0, sample_size))
+plot(c(1:(i-1)), N_k_tb[c(1:(i-1)),4], type='l', ylim=c(0, sample_size))
+plot(c(1:(i-1)), N_k_tb[c(1:(i-1)),5], type='l', ylim=c(0, sample_size))
+plot(c(1:(i-1)), N_k_tb[c(1:(i-1)),6], type='l', ylim=c(0, sample_size))
+
+
+#============================= - log-hazard rates and comparison males/females - =======================
+
+## - Males
+
+log_hf_m <- function(t){
+  
+  piece1 <- log(pi_mw_post_m) - exp(alpha_post_m[1] + beta_post_m[1] * 60 + gamma_star_post_m_M) * (exp(beta_post_m[1] * t) - 1) / beta_post_m[1] + alpha_post_m[1] + beta_post_m[1] * (60 + t) + gamma_star_post_m_M
+
+  max_piece1 <- max(piece1)
+  
+  num_calc_lse <- max_piece1 + log(sum(exp(piece1-max_piece1)))
+
+  piece2 <- log(pi_mw_post_m) - exp(alpha_post_m[1] + beta_post_m[1] * 60 + gamma_star_post_m_M) * (exp(beta_post_m[1] * t) - 1) / beta_post_m[1] 
+  
+  max_piece2 <- max(piece2)
+  
+  den_calc_lse <- max_piece2 + log(sum(exp(piece2-max_piece2)))
+  
+  return(num_calc_lse - den_calc_lse)
+}
+
+log_hf_f <- function(t){
+  
+  piece1 <- log(pi_mw_post_m) - exp(alpha_post_m[2] + beta_post_m[2] * 60 + gamma_star_post_m_F) * (exp(beta_post_m[2] * t) - 1) / beta_post_m[2] + alpha_post_m[2] + beta_post_m[2] * (60 + t) + gamma_star_post_m_F
+  
+  max_piece1 <- max(piece1)
+  
+  num_calc_lse <- max_piece1 + log(sum(exp(piece1-max_piece1)))
+  
+  piece2 <- log(pi_mw_post_m) - exp(alpha_post_m[2] + beta_post_m[2] * 60 + gamma_star_post_m_F) * (exp(beta_post_m[2] * t) - 1) / beta_post_m[2] 
+  
+  max_piece2 <- max(piece2)
+  
+  den_calc_lse <- max_piece2 + log(sum(exp(piece2-max_piece2)))
+  
+  return(num_calc_lse - den_calc_lse)
+}
+
+#========== - log - hazard (by age and age difference) - ==============
+
+
+l_hf <- function(t, ageM, ageF, j, mo, ad){
+  
+  # - use logsumexp trick
+  pf_vector0 <- log(pi_mw_post_m) - ((exp(t * beta_post_m[1]) - 1) / beta_post_m[1]) * exp(alpha_post_m[1] + beta_post_m[1] * ageM + gamma_star_post_m[seq(1,49,2)]) - ((exp(t * beta_post_m[2]) - 1) / beta_post_m[2]) * exp(alpha_post_m[2] + beta_post_m[2] * ageF + gamma_star_post_m[seq(2,50,2)])  + (alpha_post_m[j] + beta_post_m[j] * (ifelse(j==1,ageM,ageF) + t) + gamma_star_post_m[seq(j,ifelse(j==1,49,50),2)]) + mo * log(z_star_mo_post_m) + log(1-z_star_mo_post_m) * (1-mo) + dnorm(log(ad), mean = z_star_ad_post_m, sd = sqrt(z_ad_v_post_m), log=TRUE)
+  max_pf0 <- max(pf_vector0)
+  
+  num_calc_lse <- max_pf0 + log(sum(exp(pf_vector0-max_pf0)))
+  
+  pf_vector1 <- log(pi_mw_post_m) - ((exp(t * beta_post_m[1]) - 1) / beta_post_m[1]) * exp(alpha_post_m[1] + beta_post_m[1] * ageM + gamma_star_post_m[seq(1,49,2)]) - ((exp(t * beta_post_m[2]) - 1) / beta_post_m[2]) * exp(alpha_post_m[2] + beta_post_m[2] * ageF + gamma_star_post_m[seq(2,50,2)])                                                                                                                       + mo * log(z_star_mo_post_m) + log(1-z_star_mo_post_m) * (1-mo) + dnorm(log(ad), mean = z_star_ad_post_m, sd = sqrt(z_ad_v_post_m), log=TRUE)
+  max_pf1 <- max(pf_vector1)
+  
+  denom_calc_lse <- max_pf1 + log(sum(exp(pf_vector1-max_pf1)))
+  
+  return(num_calc_lse - denom_calc_lse)
+  
+}
+
+# - male older (Yes) and ad=1
+log_hf_males_mo1_ad2 <- rep(0, 40)
+log_hf_females_mo1_ad2 <- rep(0, 40)
+log_hf_males_mo1_ad5 <- rep(0, 40)
+log_hf_females_mo1_ad5 <- rep(0, 40)
+log_hf_males_mo1_ad10 <- rep(0, 40)
+log_hf_females_mo1_ad10 <- rep(0, 40)
+
+log_hf_males_mo0_ad2 <- rep(0, 40)
+log_hf_females_mo0_ad2 <- rep(0, 40)
+log_hf_males_mo0_ad5 <- rep(0, 40)
+log_hf_females_mo0_ad5 <- rep(0, 40)
+log_hf_males_mo0_ad10 <- rep(0, 40)
+log_hf_females_mo0_ad10 <- rep(0, 40)
+
+
+for(t in 1:40){
+  log_hf_males_mo1_ad2[t] <- l_hf(t, 60, 60, 1, 1, 0)
+  log_hf_females_mo1_ad2[t] <- l_hf(t, 60, 60, 2, 1, 0)
+  log_hf_males_mo1_ad5[t] <- l_hf(t, 60, 60, 1, 1, 5)
+  log_hf_females_mo1_ad5[t] <- l_hf(t, 60, 60, 2, 1, 5)
+  log_hf_males_mo1_ad10[t] <- l_hf(t, 60, 60, 1, 1, 10)
+  log_hf_females_mo1_ad10[t] <- l_hf(t, 60, 60, 2, 1, 10)
+  
+  log_hf_males_mo0_ad2[t] <- l_hf(t, 60, 60, 1, 0, 0)
+  log_hf_females_mo0_ad2[t] <- l_hf(t, 60, 60, 2, 0, 0)
+  log_hf_males_mo0_ad5[t] <- l_hf(t, 60, 60, 1, 0, 5)
+  log_hf_females_mo0_ad5[t] <- l_hf(t, 60, 60, 2, 0, 5)
+  log_hf_males_mo0_ad10[t] <- l_hf(t, 60, 60, 1, 0, 10)
+  log_hf_females_mo0_ad10[t] <- l_hf(t, 60, 60, 2, 0, 10)
+  
+}
+
+
+par(mfrow=c(1,2), mar = c(4.5,4,1,0.5))
+plot(c(61:100), log_hf_males_mo1_ad2, type='l', ylim=c(-7,-1), xlab="Age", ylab='log-hazard', main="Male older=1", lwd=1.5)
+lines(c(61:100), log_hf_females_mo1_ad2, lty=1, col='grey', lwd=1.5)
+lines(c(61:100), log_hf_males_mo1_ad5, lty=2, lwd=1.5)
+lines(c(61:100), log_hf_females_mo1_ad5, lty=2, col='grey', lwd=1.5)
+lines(c(61:100), log_hf_males_mo1_ad10, lty=3, lwd=1.5)
+lines(c(61:100), log_hf_females_mo1_ad10, lty=3, col='grey', lwd=1.5)
+legend('topleft', legend=c("Males", "Females"), col=c('black', 'grey'), lwd=1.5, bty='n')
+
+plot(c(61:100), log_hf_males_mo0_ad2, type='l', ylim=c(-7,-1), xlab="Age", ylab='', main="Male older=0", lwd=1.5)
+lines(c(61:100), log_hf_females_mo0_ad2, lty=1, col='grey', lwd=1.5)
+lines(c(61:100), log_hf_males_mo0_ad5, lty=2, lwd=1.5)
+lines(c(61:100), log_hf_females_mo0_ad5, lty=2, col='grey', lwd=1.5)
+lines(c(61:100), log_hf_males_mo0_ad10, lty=3, lwd=1.5)
+lines(c(61:100), log_hf_females_mo0_ad10, lty=3, col='grey', lwd=1.5)
+legend('bottomright', legend=c("Age diff.=1", "Age diff.=5", "Age diff.=10"), lwd=2, lty=c(1,2,3), bty='n')
+
+# - Comparison with empirical rates
+n_ages <- 40
+age_baseline <- 60
+
+X_mo1 <- X[Z$maleelder==1,]
+t_i_mo1 <- t_i[Z$maleelder==1]
+a_i_mo1 <- data_final$trunc[Z$maleelder==1]
+d_ci_mo1 <- as.data.frame(cbind(data_final$dmale[Z$maleelder==1], data_final$dfemale[Z$maleelder==1]))
+colnames(d_ci_mo1) <- c("male", "female")
+
+E_cxM_mo1 <- matrix(0, nrow(Z[Z$maleelder==1,]), n_ages) #rep(0, n_ages)
+d_xM_mo1 <- matrix(0, nrow(Z[Z$maleelder==1,]), n_ages)
+E_cxF_mo1 <- matrix(0, nrow(Z[Z$maleelder==1,]), n_ages)
+d_xF_mo1 <- matrix(0, nrow(Z[Z$maleelder==1,]), n_ages)
+
+X_mo0 <- X[Z$maleelder==0,]
+t_i_mo0 <- t_i[Z$maleelder==0]
+a_i_mo0 <- data_final$trunc[Z$maleelder==0]
+d_ci_mo0 <- as.data.frame(cbind(data_final$dmale[Z$maleelder==0], data_final$dfemale[Z$maleelder==0]))
+colnames(d_ci_mo0) <- c("male", "female")
+
+E_cxM_mo0 <- matrix(0, nrow(Z[Z$maleelder==0,]), n_ages) #rep(0, n_ages)
+d_xM_mo0 <- matrix(0, nrow(Z[Z$maleelder==0,]), n_ages)
+E_cxF_mo0 <- matrix(0, nrow(Z[Z$maleelder==0,]), n_ages)
+d_xF_mo0 <- matrix(0, nrow(Z[Z$maleelder==0,]), n_ages)
+
+
+for(age in (age_baseline + 1):100){
+  E_cxM_mo1[age - age_baseline] <- 0
+  d_xM_mo1[age - age_baseline] <- 0
+  E_cxF_mo1[age - age_baseline] <- 0
+  d_xF_mo1[age - age_baseline] <- 0
+  for(i in 1:nrow(Z[Z$maleelder==1,])){
+    E_cxM_mo1[i,age - age_baseline] <- max(0, min(age, X_mo1$male[i] + a_i_mo1[i] + t_i_mo1[i]) - max(X_mo1$male[i] + a_i_mo1[i], age-1))
+    d_xM_mo1[i,age - age_baseline] <- ifelse(d_ci_mo1$male[i]==1 & ((X_mo1$male[i] + a_i_mo1[i] + t_i_mo1[i]) >= (age-1)) & ((X_mo1$male[i] + a_i_mo1[i] + t_i_mo1[i]) < age), 1, 0)
+    E_cxF_mo1[i,age - age_baseline] <- max(0, min(age, X_mo1$female[i] + a_i_mo1[i] + t_i_mo1[i]) - max(X_mo1$female[i] + a_i_mo1[i], age-1))
+    d_xF_mo1[i,age - age_baseline] <- ifelse(d_ci_mo1$female[i]==1 & ((X_mo1$female[i] + a_i_mo1[i] + t_i_mo1[i]) >= (age-1)) & ((X_mo1$female[i] + a_i_mo1[i] + t_i_mo1[i]) < age), 1, 0)
+  }
+  
+}
+
+for(age in (age_baseline + 1):100){
+  E_cxM_mo0[age - age_baseline] <- 0
+  d_xM_mo0[age - age_baseline] <- 0
+  E_cxF_mo0[age - age_baseline] <- 0
+  d_xF_mo0[age - age_baseline] <- 0
+  for(i in 1:nrow(Z[Z$maleelder==0,])){
+    E_cxM_mo0[i,age - age_baseline] <- max(0, min(age, X_mo0$male[i] + a_i_mo0[i] + t_i_mo0[i]) - max(X_mo0$male[i] + a_i_mo0[i], age-1))
+    d_xM_mo0[i,age - age_baseline] <- ifelse(d_ci_mo0$male[i]==1 & ((X_mo0$male[i] + a_i_mo0[i] + t_i_mo0[i]) >= (age-1)) & ((X_mo0$male[i] + a_i_mo0[i] + t_i_mo0[i]) < age), 1, 0)
+    E_cxF_mo0[i,age - age_baseline] <- max(0, min(age, X_mo0$female[i] + a_i_mo0[i] + t_i_mo0[i]) - max(X_mo0$female[i] + a_i_mo0[i], age-1))
+    d_xF_mo0[i,age - age_baseline] <- ifelse(d_ci_mo0$female[i]==1 & ((X_mo0$female[i] + a_i_mo0[i] + t_i_mo0[i]) >= (age-1)) & ((X_mo0$female[i] + a_i_mo0[i] + t_i_mo0[i]) < age), 1, 0)
+  }
+  
+}
+
+colSums(d_xF_mo0)
+sum(d_xF_mo0)
+
+colSums(d_xM_mo0)
+sum(d_xM_mo0)
+
+
+par(mfrow=c(1,1), mar = c(4.5,4,1,0.5))
+plot(c((age_baseline+1):100), log(colSums(d_xM_mo1) / colSums(E_cxM_mo1)), pch=20, ylim=c(-6,0), xlab="Age", ylab="log-death rates", cex=1)
+points(c((age_baseline+1):100), log(colSums(d_xF_mo1) / colSums(E_cxF_mo1)), pch=20, col='grey', cex=1)
+points(c((age_baseline+1):100), log(colSums(d_xM_mo0) / colSums(E_cxM_mo0)), pch=4, cex=0.6)
+points(c((age_baseline+1):100), log(colSums(d_xF_mo0) / colSums(E_cxF_mo0)), pch=4, col='grey', cex=0.6)
+legend('bottomright', legend=c("Males", "Females"), pch=20, col=c('black', 'grey'), bty='n', cex=0.8)
+legend('topleft', legend=c("Male older = 1", "Male older = 0"), pch=c(20,4), bty='n', cex=0.8)
+
+
+
+# - Density plot (hence produce an 4x4 plot)
+n_samples <- 1000000
+row_sample <- sample(seq_bi_thn, n_samples, replace=TRUE)
+pi_sample <- pi_mw[row_sample,]
+alphaM_sample <- alpha[row_sample,1]
+alphaF_sample <- alpha[row_sample,2]
+betaM_sample <- beta[row_sample,1]
+betaF_sample <- beta[row_sample,2]
+
+gammaM_sample <- gamma_star[row_sample, seq(1, 49, 2)]
+gammaF_sample <- gamma_star[row_sample, seq(2, 50, 2)]
+
+z_star_ad_sample <- z_star_ad[row_sample,]
+z_star_mo_sample <- z_star_mo[row_sample,]
+z_ad_v_sample <- z_ad_v[row_sample]
+
+s_sample <- rep(0, n_samples)
+gammaM_sample2 <- rep(0, n_samples) #matrix(NA, nrow=n_samples, col=K)
+gammaF_sample2 <- rep(0, n_samples) #matrix(NA, nrow=n_samples, col=K)
+
+
+t_density <- function(age, Z_ad, Z_mo){
+  y_sample <- matrix(NA, nrow=n_samples, ncol=2)
+  
+  for(sample in 1:n_samples){
+  
+  prob_vector0 <- pi_sample[sample,] * dnorm(log(Z_ad), mean=z_star_ad_sample[sample,], sd=sqrt(z_ad_v_sample[sample])) * (z_star_mo_sample[sample,]^Z_mo) * ((1 - z_star_mo_sample[sample,])^(1 - Z_mo))
+  prob_vector1 <- prob_vector0 / sum(prob_vector0)
+  
+  s_sample[sample] <- sample(c(1:K), 1, prob=pi_sample[sample,])
+  
+  gammaM_sample2[sample] <- gammaM_sample[sample, s_sample[sample]]
+  gammaF_sample2[sample] <- gammaF_sample[sample, s_sample[sample]]
+  
+  y_sample[sample,1] <- log(1 + betaM_sample[sample] * rexp(1, rate=exp(alphaM_sample[sample] + gammaM_sample2[sample] + betaM_sample[sample] * age))) / betaM_sample[sample]   # - rnorm(1, mean=theta1_bar[s_sample[sample]], sd=sqrt(sigma2_c_bar[1]))
+  y_sample[sample,2] <- log(1 + betaF_sample[sample] * rexp(1, rate=exp(alphaF_sample[sample] + gammaF_sample2[sample] + betaF_sample[sample] * age))) / betaF_sample[sample]   # rnorm(1, mean=theta2_bar[s_sample[sample]], sd=sqrt(sigma2_c_bar[2]))
+  }
+  return(y_sample)
+  }
+  
+t_ad2_mo1 <- t_density(60, 2, 1)
+t_ad5_mo1 <- t_density(60, 5, 1)
+t_ad10_mo1 <- t_density(60, 10, 1)
+t_ad2_mo0 <- t_density(60, 2, 0)
+t_ad5_mo0 <- t_density(60, 5, 0)
+t_ad10_mo0 <- t_density(60, 10, 0)
+
+colMeans(t_ad2_mo1)
+colMeans(t_ad5_mo1)
+colMeans(t_ad10_mo1)
+colMeans(t_ad2_mo0)
+colMeans(t_ad5_mo0)
+colMeans(t_ad10_mo0)
+
+plot(density(t_ad2_mo1[,1]), xlab="t", ylab='f(t)', main="Male older=1", ylim=c(0,0.05), lwd=0.5)  
+lines(density(t_ad5_mo1[,1]), lty=2, lwd=0.5)
+lines(density(t_ad10_mo1[,1]), lty=3, lwd=0.5)
+lines(density(t_ad2_mo1[,2]), lty=1, col='grey', lwd=0.5)
+lines(density(t_ad5_mo1[,2]), lty=2, col='grey', lwd=0.5)
+lines(density(t_ad10_mo1[,2]), lty=3, col='grey', lwd=0.5)
+
+plot(density(t_ad2_mo0[,1]), xlab="t", ylab='f(t)', main="Male older=0", ylim=c(0,0.05), lwd=0.5)  
+lines(density(t_ad5_mo0[,1]), lty=2, lwd=0.5)
+lines(density(t_ad10_mo0[,1]), lty=3, lwd=0.5)
+lines(density(t_ad2_mo0[,2]), lty=1, col='grey', lwd=0.5)
+lines(density(t_ad5_mo0[,2]), lty=2, col='grey', lwd=0.5)
+lines(density(t_ad10_mo0[,2]), lty=3, col='grey', lwd=0.5)
+
+#======================== - Effect of the covariates on gamma - =========================
+
+Cov_effect_male <- matrix(NA, 2, 10)
+Cov_effect_female <- matrix(NA, 2, 10)
+
+# - MO = 1
+for(log_AD in -6:3){
+  prob_vector0 <- pi_mw_post_m * dnorm(log_AD, mean=z_star_ad_post_m, sd=sqrt(z_ad_v_post_m)) * z_star_mo_post_m
+  prob_vector1 <- prob_vector0 / sum(prob_vector0)
+  
+  Cov_effect_male[1,log_AD+7] <- sum(prob_vector1 * gamma_star_post_m_M)
+  Cov_effect_female[1,log_AD+7] <- sum(prob_vector1 * gamma_star_post_m_F)
+}
+
+for(log_AD in -6:3){
+  prob_vector0 <- pi_mw_post_m * dnorm(log_AD, mean=z_star_ad_post_m, sd=sqrt(z_ad_v_post_m)) * (1 - z_star_mo_post_m)
+  prob_vector1 <- prob_vector0 / sum(prob_vector0)
+  
+  Cov_effect_male[2,log_AD+7] <- sum(prob_vector1 * gamma_star_post_m_M)
+  Cov_effect_female[2,log_AD+7] <- sum(prob_vector1 * gamma_star_post_m_F)
+  
+}
+
+par(mfrow=c(1,1), mar = c(4.5,4,1,0.5))
+plot(exp(-6:3), Cov_effect_male[1,], type='l', ylim=c(-2.5,3), xlab='Age difference', ylab='Average gamma', lwd=2)
+lines(exp(-6:3), Cov_effect_male[2,], lty=2, lwd=2)
+lines(exp(-6:3), Cov_effect_female[1,], lty=1, col='grey', lwd=2)
+lines(exp(-6:3), Cov_effect_female[2,], lty=2, col='grey', lwd=2)
+legend('topright', legend=c("Males", "Females"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+legend('bottomright', legend=c("Male Older = 1", "Male Older = 0"), lty=c(1,2), lwd=2, bty='n', cex=0.75)
+
+
+xtable(Cov_effect[1:4,], digits = rep(3, 21))
+
+# - Effect of the age difference
+AD_effect <- matrix(NA, 2, 10)
+
+for(log_AD in -6:3){
+  prob_vector0 <- pi_mw_post_m * dnorm(log_AD, mean=z_star_ad_post_m, sd=sqrt(z_ad_v_post_m))
+  prob_vector1 <- prob_vector0 / sum(prob_vector0)
+  
+  AD_effect[1,log_AD+7] <- sum(prob_vector1 * gamma_star_post_m_M)
+  AD_effect[2,log_AD+7] <- sum(prob_vector1 * gamma_star_post_m_F)
+}
+
+plot(exp(-6:3), AD_effect[1,], type='l', ylim=c(-2,2.5), xlab='Age difference', ylab='Average gamma', lwd=2)
+lines(exp(-6:3), AD_effect[2,], col='grey', lwd=2)
+
+# - Effect of the male older
+MO_effect <- matrix(NA, 2, 2)
+
+for(mo in 0:1){
+  prob_vector0 <- pi_mw_post_m * (z_star_mo_post_m^(mo)) * ((1 - z_star_mo_post_m)^(1 - mo))
+  prob_vector1 <- prob_vector0 / sum(prob_vector0)
+  
+  MO_effect[1,mo+1] <- sum(prob_vector1 * gamma_star_post_m_M)
+  MO_effect[2,mo+1] <- sum(prob_vector1 * gamma_star_post_m_F)
+}
+
+colnames(MO_effect) <- c("MO=0", "MO=1")
+rownames(MO_effect) <- c("Male", "Females")
+
+MO_effect[,1] - MO_effect[,2]
+
+#======================== - Analyis of dependent time to event - =========================
+
+# - Comment: eliminating the age-dependence (i.e. if we random draw it) then we note an increase in the correlation between
+# - the time to events in males and females
+
+n_samples <- 10000
+
+t_dependent <- function(n_samples, age_base, Z_ad, Z_mo){#function(age_base, Z_ad, Z_mo){
+  s_sample <- rep(0, n_samples)
+  t_dep_sample <- matrix(NA, n_samples, 2)
+
+  # - Step 2: choose the conditional probability distribution
+  prob_vector0 <- pi_mw_post_m * dnorm(log(Z_ad), mean=z_star_ad_post_m, sd=sqrt(z_ad_v_post_m)) * (z_star_mo_post_m^Z_mo) * ((1 - z_star_mo_post_m)^(1 - Z_mo))
+  prob_vector1 <- prob_vector0 / sum(prob_vector0)
+  
+  for(sample in 1:n_samples){
+    s_sample[sample] <- sample(c(1:K), 1, prob=prob_vector1)
+    age <- runif(1, age_base, 100)
+#    t_dep_sample[sample,1] <- log(1 + beta_post_m[1] * rexp(1, rate=exp(alpha_post_m[1] + gamma_star_post_m_M[s_sample[sample]] + beta_post_m[1] * (age +  Z_ad *      Z_mo  )  ))) / beta_post_m[1]   # - rnorm(1, mean=theta1_bar[s_sample[sample]], sd=sqrt(sigma2_c_bar[1]))
+#    t_dep_sample[sample,2] <- log(1 + beta_post_m[2] * rexp(1, rate=exp(alpha_post_m[2] + gamma_star_post_m_F[s_sample[sample]] + beta_post_m[2] * (age - (Z_ad * (1 - Z_mo)))  ))) / beta_post_m[2]   # rnorm(1, mean=theta2_bar[s_sample[sample]], sd=sqrt(sigma2_c_bar[2]))
+    t_dep_sample[sample,1] <- log(1 + beta_post_m[1] * rexp(1, rate=exp(alpha_post_m[1] + gamma_star_post_m_M[s_sample[sample]] + beta_post_m[1] * (age +  Z_ad *      Z_mo  )  ))) / beta_post_m[1]   # - rnorm(1, mean=theta1_bar[s_sample[sample]], sd=sqrt(sigma2_c_bar[1]))
+    t_dep_sample[sample,2] <- log(1 + beta_post_m[2] * rexp(1, rate=exp(alpha_post_m[2] + gamma_star_post_m_F[s_sample[sample]] + beta_post_m[2] * (age - (Z_ad * (1 - Z_mo)))  ))) / beta_post_m[2]   # rnorm(1, mean=theta2_bar[s_sample[sample]], sd=sqrt(sigma2_c_bar[2]))
+  }
+  return(t_dep_sample)
+}
+
+# - table
+sequence <- c(seq(0.1,1,0.1), seq(1.5, 20, 0.5))# c(0.5, 20, 0.5)
+spearman_tb <- matrix(NA, 2, length(sequence))
+kendall_tb <- matrix(NA, 2, length(sequence))
+
+ab <- 60
+n_samples <- 1000
+col<- 1
+for(ad in sequence){
+  row <- 1
+  for(mo in c(1,0)){
+    t_dep <- t_dependent(n_samples, ab, ad, mo)
+    spearman_tb[row,col] <- cor.test(x=t_dep[,1], y=t_dep[,2], method = 'spearman')$estimate
+    kendall_tb[row,col] <-  cor.test(x=t_dep[,1], y=t_dep[,2], method = 'kendall')$estimate
+    
+    row <- row + 1
+  }
+col <- col + 1
+}
+
+par(mfrow=c(1,2), mar = c(4.5,4,1,0.5))
+plot(sequence, spearman_tb[1,], type='l', ylim=c(0.1,0.6), xlab="Age difference", ylab='Spearman rho', lwd=2)
+lines(sequence, spearman_tb[2,], col='grey', lwd=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+plot(sequence, kendall_tb[1,], type='l', ylim=c(0.1,0.6), xlab="Age difference", ylab='Kendall tau', lwd=2)
+lines(sequence, kendall_tb[2,], col='grey', lwd=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+
+# - Below there's the older part about the dependence analysis (using AD=2,5,10)
+
+ab <- 60
+t_dep_ad2_mo1 <- t_dependent(1000, ab, 2, 1)
+t_dep_ad5_mo1 <- t_dependent(ab, 5, 1)
+t_dep_ad10_mo1 <- t_dependent(ab, 10, 1)
+t_dep_ad2_mo0 <- t_dependent(ab, 2, 0)
+t_dep_ad5_mo0 <- t_dependent(ab, 5, 0)
+t_dep_ad10_mo0 <- t_dependent(ab, 10, 0)
+
+ab <- 80
+t_dep_ad2_mo1 <- t_dependent(ab, 2, 1)
+t_dep_ad5_mo1 <- t_dependent(ab, 5, 1)
+t_dep_ad10_mo1 <- t_dependent(ab, 10, 1)
+t_dep_ad2_mo0 <- t_dependent(ab, 2, 0)
+t_dep_ad5_mo0 <- t_dependent(ab, 5, 0)
+t_dep_ad10_mo0 <- t_dependent(ab, 10, 0)
+
+par(mfrow=c(1,2), mar = c(4.5,4,1,0.5))
+plot(log(t_dep_ad2_mo1[,1]),log(t_dep_ad2_mo1[,2]), pch=20, cex=0.1, ylim=c(-6,5), xlim=c(-8,4), xlab='log(T) males', ylab='log(T) females', main='Male Older=1')
+points(log(t_dep_ad5_mo1[,1]),log(t_dep_ad5_mo1[,2]), col='gray', pch=20, cex=0.1)
+points(log(t_dep_ad10_mo1[,1]),log(t_dep_ad10_mo1[,2]), col='azure2', pch=20, cex=0.1)
+legend('bottomleft', legend=c("AD=2", "AD=5", 'AD=10'), col=c('black', 'grey', 'azure2'), pch=16, bty='n', cex=0.75)
+
+plot(log(t_dep_ad2_mo0[,1]),log(t_dep_ad2_mo0[,2]), pch=20, cex=0.1, ylim=c(-6,5), xlim=c(-8,4), xlab='log(T) males', ylab='log(T) females', main='Male Older=0')
+points(log(t_dep_ad5_mo0[,1]),log(t_dep_ad5_mo0[,2]), col='gray', pch=20, cex=0.1)
+points(log(t_dep_ad10_mo0[,1]),log(t_dep_ad10_mo0[,2]), col='azure2', pch=20, cex=0.1)
+legend('bottomleft', legend=c("AD=2", "AD=5", 'AD=10'), col=c('black', 'grey', 'azure2'), pch=16, bty='n', cex=0.75)
+
+cor(log(t_dep_ad2_mo1[,1]), log(t_dep_ad2_mo1[,2]))
+cor(log(t_dep_ad5_mo1[,1]), log(t_dep_ad5_mo1[,2]))
+cor(log(t_dep_ad10_mo1[,1]), log(t_dep_ad10_mo1[,2]))
+
+cor(t_dep_ad2_mo0[,1], y=t_dep_ad2_mo0[,2])
+cor(t_dep_ad5_mo0[,1], y=t_dep_ad5_mo0[,2])
+cor(t_dep_ad10_mo0[,1], y=t_dep_ad10_mo0[,2])
+
+rhosphea <- cor.test(x=t_dep_ad2_mo1[,1], y=t_dep_ad2_mo1[,2], method = 'spearman')$estimate
+cor.test(x=t_dep_ad5_mo1[,1], y=t_dep_ad5_mo1[,2], method = 'spearman')
+cor.test(x=t_dep_ad10_mo1[,1], y=t_dep_ad10_mo1[,2], method = 'spearman')
+
+cor.test(x=t_dep_ad2_mo0[,1], y=t_dep_ad2_mo0[,2], method = 'spearman')
+cor.test(x=t_dep_ad5_mo0[,1], y=t_dep_ad5_mo0[,2], method = 'spearman')
+cor.test(x=t_dep_ad10_mo0[,1], y=t_dep_ad10_mo0[,2], method = 'spearman')
+
+cor.test(x=t_dep_ad2_mo1[,1], y=t_dep_ad2_mo1[,2], method = 'kendall')
+cor.test(x=t_dep_ad5_mo1[,1], y=t_dep_ad5_mo1[,2], method = 'kendall')
+cor.test(x=t_dep_ad10_mo1[,1], y=t_dep_ad10_mo1[,2], method = 'kendall')
+
+cor.test(x=t_dep_ad2_mo0[,1], y=t_dep_ad2_mo0[,2], method = 'kendall')
+cor.test(x=t_dep_ad5_mo0[,1], y=t_dep_ad5_mo0[,2], method = 'kendall')
+cor.test(x=t_dep_ad10_mo0[,1], y=t_dep_ad10_mo0[,2], method = 'kendall')
+
+cor.test(x=log(t_dep_ad2_mo1[,1]), y=log(t_dep_ad2_mo1[,2]), method = 'kendall')
+cor.test(x=log(t_dep_ad5_mo1[,1]), y=log(t_dep_ad5_mo1[,2]), method = 'kendall')
+cor.test(x=log(t_dep_ad10_mo1[,1]), y=log(t_dep_ad10_mo1[,2]), method = 'kendall')
+
+cor.test(x=log(t_dep_ad2_mo0[,1]), y=log(t_dep_ad2_mo0[,2]), method = 'kendall')
+cor.test(x=log(t_dep_ad5_mo0[,1]), y=log(t_dep_ad5_mo0[,2]), method = 'kendall')
+cor.test(x=log(t_dep_ad10_mo0[,1]), y=log(t_dep_ad10_mo0[,2]), method = 'kendall')
+
+
+Correlation_table_60 <- matrix(NA, 2, 10)
+#rho_table_60 <- matrix(NA, 2, 10)
+#tau_table_60 <- matrix(NA, 2, 10)
+age_base1 <- 60
+for(Z_mo in 0:1){
+  for(Z_ad in 1:10){
+    Correlation_table_60[Z_mo+1,Z_ad] <- cor(log(t_dependent(age_base1, Z_ad, Z_mo)))[1,2]
+  }
+}
+
+Correlation_table_80 <- matrix(NA, 2, 10)
+age_base1 <- 80
+for(Z_mo in 0:1){
+  for(Z_ad in 1:10){
+    Correlation_table_80[Z_mo+1,Z_ad] <- cor(log(t_dependent(age_base1, Z_ad, Z_mo)))[1,2]
+  }
+}
+
+plot(c(1:10), Correlation_table_60[1,], type='l', lwd=1.5, ylab = "Correlation log(T)", xlab='Age Difference', ylim=c(0,0.5))
+lines(c(1:10), Correlation_table_60[2,], type='l', col='grey', lwd=1.5)
+lines(c(1:10), Correlation_table_80[1,], type='l', col='black', lwd=1.5, lty=2)
+lines(c(1:10), Correlation_table_80[2,], type='l', col='grey', lwd=1.5, lty=2)
+
+# - Comment: since the analysis of correlated time to event to not provide any meaningful result, it is the case
+# - to analyse the correlated gamma, given the value of zeta. We have still to figure out whether we should consider its
+# - predictive distribution in terms of the MCMC output (given the poor mixing), or just the posterior mean
+
+n_samples <- 10000
+
+gamma_star_post_m_M <- gamma_star_post_m[seq(1,M*K-1,M)]
+gamma_star_post_m_F <- gamma_star_post_m[seq(2,M*K  ,M)]
+
+gamma_dependent <- function(Z_ad, Z_mo){
+  s_sample <- rep(0, n_samples)
+  gamma_dep_sample <- matrix(NA, n_samples, 2)
+  #  age_base_cor <- age_base - x_bar
+  
+  # - Step 2: choose the conditional probability distribution
+  prob_vector0 <- pi_mw_post_m * dnorm(log(Z_ad), mean=z_star_ad_post_m, sd=sqrt(z_ad_v_post_m)) * (z_star_mo_post_m^Z_mo) * ((1 - z_star_mo_post_m)^(1 - Z_mo))
+  prob_vector1 <- prob_vector0 / sum(prob_vector0)
+  
+  for(sample in 1:n_samples){
+    s_sample[sample] <- sample(c(1:K), 1, prob=prob_vector1)
+    gamma_dep_sample[sample,1] <- gamma_star_post_m_M[s_sample[sample]]
+    gamma_dep_sample[sample,2] <- gamma_star_post_m_F[s_sample[sample]]
+  }
+  return(gamma_dep_sample)
+}
+
+ga_dep_ad2_mo1 <- gamma_dependent(2, 1)
+ga_dep_ad5_mo1 <- gamma_dependent(5, 1)
+ga_dep_ad10_mo1 <- gamma_dependent(10, 1)
+ga_dep_ad2_mo0 <- gamma_dependent(2, 0)
+ga_dep_ad5_mo0 <- gamma_dependent(5, 0)
+ga_dep_ad10_mo0 <- gamma_dependent(10, 0)
+
+plot(ga_dep_ad2_mo1[,1], ga_dep_ad2_mo1[,2], pch=16, cex=0.1)
+points(ga_dep_ad5_mo1[,1], ga_dep_ad5_mo1[,2], col='gray', pch=16, cex=0.1)
+points(ga_dep_ad10_mo1[,1], ga_dep_ad10_mo1[,2], col='azure2', pch=16, cex=0.1)
+
+
+Correlation_table_gamma <- matrix(NA, 2, 10)
+rho_table_60 <- matrix(NA, 2, 10)
+tau_table_60 <- matrix(NA, 2, 10)
+age_base <- 60
+for(Z_mo in 0:1){
+  for(Z_ad in 1:10){
+    Correlation_table_gamma[Z_mo+1,Z_ad] <- cor(gamma_dependent(Z_ad, Z_mo))[1,2]
+  }
+}
+
+plot(c(1:10), Correlation_table_gamma[1,], type='l', lwd=1.5, ylab = "Correlation log(T)", xlab='Age Difference', ylim=c(-1,1))
+lines(c(1:10), Correlation_table_gamma[2,], type='l', col='grey', lwd=1.5)
+
+
+#===================== - Group analysis & Analysis of clusters by Bayes' rule - ==========================
+
+N_c_tb_thn <- mean(N_c_tb[seq_bi_thn])
+N_k_tb_thn <- colMeans(N_k_tb[seq_bi_thn,])
+100 * N_k_tb_thn / sample_size
+
+sum(N_k_tb_thn[1:4]) / sample_size
+
+par(mfrow=c(1,1), mar = c(4.5,4,1,0.5))
+barplot(N_k_tb_thn, main="", horiz=FALSE, xlab = "Mixture component (k)", ylab="Post. mean n_k", cex.names=0.7, names.arg=c(1:K))
+abline(h=round(0.025 * sample_size,0))
+
+
+post_prob_fc <- function(unit){
+  
+  # - use log sum exp trick to deal with very small numbers which R inappropriately set to zero
+  pf_vector <- rep(0, K)
+  th_k_pos <- c(1:M) # position vector for theta
+  
+  pf_vector <- log(pi_mw_post_m) - exp(alpha_post_m[1] + beta_post_m[1] * X$male[unit]   + gamma_star_post_m[seq(1, M*K-1, M)]) * (exp(beta_post_m[1] * (t_i[unit] + a_i[unit])) - exp(beta_post_m[1] * a_i[unit])) / beta_post_m[1] + d_ci$male[unit]   * gamma_star_post_m[seq(1, M*K-1, M)] - 
+                                   exp(alpha_post_m[2] + beta_post_m[2] * X$female[unit] + gamma_star_post_m[seq(2, M*K  , M)]) * (exp(beta_post_m[2] * (t_i[unit] + a_i[unit])) - exp(beta_post_m[2] * a_i[unit])) / beta_post_m[2] + d_ci$female[unit] * gamma_star_post_m[seq(2, M*K  , M)] + 
+               dnorm(Z$lAD[unit], mean=z_star_ad_post_m, sd=sqrt(z_ad_v_post_m), log = TRUE) + Z$maleelder[unit] * log(z_star_mo_post_m) + (1 - Z$maleelder[unit]) * log(1 - z_star_mo_post_m)
+  
+  max_bayes <- max(pf_vector)
+  bayes_alloc <- which(pf_vector==max_bayes)
+  
+  return(bayes_alloc)
+}
+
+Bayes_allocation <- sapply(c(1:sample_size), FUN = post_prob_fc)
+Group_analysis <- cbind(X, Z[,c(1,2)], d_ci, Bayes_allocation)
+colnames(Group_analysis) <- c("AgeM", "AgeF", "AD", "MO", "DeathM", "DeathF", "BayesGroup")
+
+class <- c(100 * nrow(Group_analysis[Group_analysis$BayesGroup==1,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==2,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==3,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==4,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==5,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==6,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==7,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==8,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==9,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==10,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==11,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==12,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==13,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==14,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==15,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==16,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==17,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==18,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==19,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==20,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==21,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==22,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==23,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==24,]) / sample_size,
+           100 * nrow(Group_analysis[Group_analysis$BayesGroup==25,]) / sample_size)
+
+## - Group selection Analysis
+group_select <- 1
+Gr_select <- Group_analysis[Group_analysis$BayesGroup==group_select,]
+
+100*nrow(Gr_select) / nrow(Group_analysis)
+
+mean(Gr_select$AgeM)
+mean(Gr_select$AgeF)
+mean(Gr_select$AD)
+mean(Gr_select$MO)
+
+c(gamma_star_post_m_M[group_select], gamma_star_post_m_F[group_select])
+
+plot(gamma_star_thn[,seq(1, M*K-1,M)[group_select]], gamma_star_thn[,seq(2, M*K,M)[group_select]], pch=20, cex=0.1)
+cor(gamma_star_thn[,seq(1, M*K-1,M)[group_select]], gamma_star_thn[,seq(2, M*K,M)[group_select]]) # - Careful, because this is a matter of posterior parameter correlation
+
+group_select <- 2
+Gr_select <- Group_analysis[Group_analysis$BayesGroup==group_select,]
+
+100*nrow(Gr_select) / nrow(Group_analysis)
+
+mean(Gr_select$AgeM)
+mean(Gr_select$AgeF)
+mean(Gr_select$AD)
+mean(Gr_select$MO)
+
+c(gamma_star_post_m_M[group_select], gamma_star_post_m_F[group_select])
+
+plot(gamma_star_thn[,seq(1, M*K-1,M)[group_select]], gamma_star_thn[,seq(2, M*K,M)[group_select]], pch=20, cex=0.1)
+cor(gamma_star_thn[,seq(1, M*K-1,M)[group_select]], gamma_star_thn[,seq(2, M*K,M)[group_select]])
+
+
+group_select <- 3
+Gr_select <- Group_analysis[Group_analysis$BayesGroup==group_select,]
+
+100*nrow(Gr_select) / nrow(Group_analysis)
+
+mean(Gr_select$AgeM)
+mean(Gr_select$AgeF)
+mean(Gr_select$AD)
+mean(Gr_select$MO)
+
+c(gamma_star_post_m_M[group_select], gamma_star_post_m_F[group_select])
+
+
+group_select <- 4
+Gr_select <- Group_analysis[Group_analysis$BayesGroup==group_select,]
+
+100*nrow(Gr_select) / nrow(Group_analysis)
+
+mean(Gr_select$AgeM)
+mean(Gr_select$AgeF)
+mean(Gr_select$AD)
+mean(Gr_select$MO)
+c(gamma_star_post_m_M[group_select], gamma_star_post_m_F[group_select])
+
+
+# - In the training sample
+mean(Group_analysis$AgeM)
+mean(Group_analysis$AgeF)
+mean(Group_analysis$AD)
+mean(Group_analysis$MO)
+
+#=============================== - Model comparison - =========================
+
+# - in sample performance
+
+## - AIC base Gompertz
+alpha_BG_m <- par_est_male_s$estimate[1]
+beta_BG_m <- par_est_male_s$estimate[2]
+
+alpha_BG_f <- par_est_female_s$estimate[1]
+beta_BG_f <- par_est_female_s$estimate[2]
+
+log_L_BG_is <- sum( - exp(alpha_BG_m + beta_BG_m * X$male  ) * (exp(beta_BG_m * (t_i + a_i)) - exp(beta_BG_m * a_i)) / beta_BG_m + d_ci$male   * (alpha_BG_m + beta_BG_m * (X$male   + a_i + t_i)) -
+                      exp(alpha_BG_f + beta_BG_f * X$female) * (exp(beta_BG_f * (t_i + a_i)) - exp(beta_BG_f * a_i)) / beta_BG_f + d_ci$female * (alpha_BG_f + beta_BG_f * (X$female + a_i + t_i)))
+
+AIC_BG_is <- - 2 * log_L_BG_is + 2 * 8
+
+
+## - AIC Gompertz independent
+par_init <- c(-10, 0.1, 0.1, 0.1)
+par_est_male_s_cov <- nlm(log_L_m_cov, p=par_init, typsize=par_init, hessian=T, iterlim=10000)
+par_est_female_s_cov <- nlm(log_L_f_cov, p=par_init, typsize=par_init, hessian=T, iterlim=10000)
+
+alpha_G_m <- par_est_male_s_cov$estimate[1]
+beta_G_m <- par_est_male_s_cov$estimate[2]
+gamma_AD_G_m <- par_est_male_s_cov$estimate[3]
+gamma_MO_G_m <- par_est_male_s_cov$estimate[4]
+
+alpha_G_f <- par_est_female_s_cov$estimate[1]
+beta_G_f <- par_est_female_s_cov$estimate[2]
+gamma_AD_G_f <- par_est_female_s_cov$estimate[3]
+gamma_MO_G_f <- par_est_female_s_cov$estimate[4]
+
+log_L_G_is <- sum( - exp(alpha_G_m + beta_G_m * X$male   + gamma_AD_G_m * Z$lAD + gamma_MO_G_m * Z$maleelder) * (exp(beta_G_m * (t_i + a_i)) - exp(beta_G_m * a_i)) / beta_G_m + d_ci$male   * (alpha_G_m + beta_G_m * (X$male   + a_i + t_i) + gamma_AD_G_m * Z$lAD + gamma_MO_G_m * Z$maleelder) -
+                     exp(alpha_G_f + beta_G_f * X$female + gamma_AD_G_f * Z$lAD + gamma_MO_G_f * Z$maleelder) * (exp(beta_G_f * (t_i + a_i)) - exp(beta_G_f * a_i)) / beta_G_f + d_ci$female * (alpha_G_f + beta_G_f * (X$female + a_i + t_i) + gamma_AD_G_f * Z$lAD + gamma_MO_G_f * Z$maleelder))
+
+AIC_G_is <- - 2 * log_L_G_is + 2 * 8
+
+### - WAIC computation
+WAIC_p1_i <- function(unit){
+  
+  M_theta <- length(seq_bi_thn)
+  
+  sum_over_m <- 0
+  
+  for(m in 1:M_theta){
+    pf_vector_num <- log(pi_mw_thn[m,]) - exp(alpha_thn[m,1] + beta_thn[m,1] * X$male[unit]   + gamma_star_thn[m,seq(1,M*K-1,M)]) * (exp(beta_thn[m,1] * (t_i[unit] + a_i[unit])) - exp(beta_thn[m,1] * a_i[unit])) / beta_thn[m,1] + d_ci$male[unit]   * (alpha_thn[m,1] + beta_thn[m,1] * (t_i[unit] + X$male[unit]   + a_i[unit]) + gamma_star_thn[m,seq(1,M*K-1,M)]) - 
+                                          exp(alpha_thn[m,2] + beta_thn[m,2] * X$female[unit] + gamma_star_thn[m,seq(2,M*K  ,M)]) * (exp(beta_thn[m,2] * (t_i[unit] + a_i[unit])) - exp(beta_thn[m,2] * a_i[unit])) / beta_thn[m,2] + d_ci$female[unit] * (alpha_thn[m,2] + beta_thn[m,2] * (t_i[unit] + X$female[unit] + a_i[unit]) + gamma_star_thn[m,seq(2,M*K  ,M)]) + 
+      dnorm(Z$lAD[unit], mean=z_star_ad_thn[m,], sd=sqrt(z_ad_v_thn[m]), log = TRUE) + Z$maleelder[unit] * log(z_star_mo_thn[m,]) + (1 - Z$maleelder[unit]) * log(1 - z_star_mo_thn[m,])
+    
+    max_pf_n <- max(pf_vector_num)
+    
+    pf_vector_den <- log(pi_mw_thn[m,]) + dnorm(Z$lAD[unit], mean=z_star_ad_thn[m,], sd=sqrt(z_ad_v_thn[m]), log = TRUE) + Z$maleelder[unit] * log(z_star_mo_thn[m,]) + (1 - Z$maleelder[unit]) * log(1 - z_star_mo_thn[m,])
+    
+    max_pf_d <- max(pf_vector_den)
+    
+    f_MF <- exp(max_pf_n + log(sum(exp(pf_vector_num - max_pf_n))) - max_pf_d - log(sum(exp(pf_vector_den - max_pf_d))))
+    
+    sum_over_m <- sum_over_m + f_MF
+    
+  }
+  
+  return(-log(M_theta) + log(sum_over_m))
+  
+}
+
+WAIC_p2_i <- function(unit){
+  
+  M_theta <- length(seq_bi_thn)
+  
+  sum_over_m <- 0
+  
+  for(m in 1:M_theta){
+    pf_vector_num <- log(pi_mw_thn[m,]) - exp(alpha_thn[m,1] + beta_thn[m,1] * X$male[unit]   + gamma_star_thn[m,seq(1,M*K-1,M)]) * (exp(beta_thn[m,1] * (t_i[unit] + a_i[unit])) - exp(beta_thn[m,1] * a_i[unit])) / beta_thn[m,1] + d_ci$male[unit]   * (alpha_thn[m,1] + beta_thn[m,1] * (t_i[unit] + X$male[unit]   + a_i[unit]) + gamma_star_thn[m,seq(1,M*K-1,M)]) - 
+                                          exp(alpha_thn[m,2] + beta_thn[m,2] * X$female[unit] + gamma_star_thn[m,seq(2,M*K  ,M)]) * (exp(beta_thn[m,2] * (t_i[unit] + a_i[unit])) - exp(beta_thn[m,2] * a_i[unit])) / beta_thn[m,2] + d_ci$female[unit] * (alpha_thn[m,2] + beta_thn[m,2] * (t_i[unit] + X$female[unit] + a_i[unit]) + gamma_star_thn[m,seq(2,M*K  ,M)]) + 
+      dnorm(Z$lAD[unit], mean=z_star_ad_thn[m,], sd=sqrt(z_ad_v_thn[m]), log = TRUE) + Z$maleelder[unit] * log(z_star_mo_thn[m,]) + (1 - Z$maleelder[unit]) * log(1 - z_star_mo_thn[m,])
+    
+    max_pf_n <- max(pf_vector_num)
+    
+    pf_vector_den <- log(pi_mw_thn[m,]) + dnorm(Z$lAD[unit], mean=z_star_ad_thn[m,], sd=sqrt(z_ad_v_thn[m]), log = TRUE) + Z$maleelder[unit] * log(z_star_mo_thn[m,]) + (1 - Z$maleelder[unit]) * log(1 - z_star_mo_thn[m,])
+    
+    max_pf_d <- max(pf_vector_den)
+    
+    log_f_MF <- max_pf_n + log(sum(exp(pf_vector_num - max_pf_n))) - max_pf_d - log(sum(exp(pf_vector_den - max_pf_d)))
+    
+    sum_over_m <- sum_over_m + log_f_MF
+    
+  }
+  
+  return(sum_over_m/M_theta)
+  
+}
+
+WAIC_p1_vector <- sapply(c(1:sample_size), WAIC_p1_i)
+WAIC_p2_vector <- sapply(c(1:sample_size), WAIC_p2_i)
+
+p_WAIC <- 2 * (sum(WAIC_p1_vector) - sum(WAIC_p2_vector))
+WAIC <- 2*(- sum(WAIC_p1_vector) + p_WAIC)
+
+
+# - out of sample
+
+## - Held out data set
+data_test <- data_shuffle[(round(nrow(data_shuffle)*0.75,0)+1):nrow(data_shuffle),]
+
+X <- as.data.frame(cbind(data_test$ageM, data_test$ageF) - data_test$trunc) 
+#X <-  as.data.frame(cbind(data$ageM, data$ageF))
+colnames(X) <- c("male", "female")
+Z <- cbind(data_test$agediff2, data_test$maleelder)
+colnames(Z) <- c("agediff", "maleelder")
+Z <- as.data.frame(Z)
+Z$lAD <- log(abs(Z$agediff))
+
+t_i <- data_test$TObs
+a_i <- data_test$trunc
+d_ci <- as.data.frame(cbind(data_test$dmale, data_test$dfemale))
+colnames(d_ci) <- c("male", "female")
+
+
+sample_size_test <- nrow(data_test)
+
+## - Base Gompertz
+log_L_BG_os <- sum( - exp(alpha_BG_m + beta_BG_m * X$male  ) * (exp(beta_BG_m * (t_i + a_i)) - exp(beta_BG_m * a_i)) / beta_BG_m + d_ci$male   * (alpha_BG_m + beta_BG_m * (X$male   + a_i + t_i)) -
+                      exp(alpha_BG_f + beta_BG_f * X$female) * (exp(beta_BG_f * (t_i + a_i)) - exp(beta_BG_f * a_i)) / beta_BG_f + d_ci$female * (alpha_BG_f + beta_BG_f * (X$female + a_i + t_i)))
+
+AIC_BG_os <- - 2 * log_L_BG_os + 2 * 8
+
+## - Proportional hazard
+log_L_G_os <- sum( - exp(alpha_G_m + beta_G_m * X$male   + gamma_AD_G_m * Z$lAD + gamma_MO_G_m * Z$maleelder) * (exp(beta_G_m * (t_i + a_i)) - exp(beta_G_m * a_i)) / beta_G_m + d_ci$male   * (alpha_G_m + beta_G_m * (X$male   + a_i + t_i) + gamma_AD_G_m * Z$lAD + gamma_MO_G_m * Z$maleelder) -
+                     exp(alpha_G_f + beta_G_f * X$female + gamma_AD_G_f * Z$lAD + gamma_MO_G_f * Z$maleelder) * (exp(beta_G_f * (t_i + a_i)) - exp(beta_G_f * a_i)) / beta_G_f + d_ci$female * (alpha_G_f + beta_G_f * (X$female + a_i + t_i) + gamma_AD_G_f * Z$lAD + gamma_MO_G_f * Z$maleelder))
+
+AIC_G_os <- - 2 * log_L_G_os + 2 * 8
+
+## - AVM
+WAIC_p1_vector_os <- sapply(c(1:sample_size_test), WAIC_p1_i)
+WAIC_p2_vector_os <- sapply(c(1:sample_size_test), WAIC_p2_i)
+
+p_WAIC_os <- 2 * (sum(WAIC_p1_vector_os) - sum(WAIC_p2_vector_os))
+WAIC_os <- 2*(- sum(WAIC_p1_vector_os) + p_WAIC_os)
+
+#================================== - Actuarial analysis - =========================
+
+# - Annuity factor for the last survivor
+ann_last_indG <- function(iota, x_male_ann, ad, mo){
+
+    integrand <- function(t){
+#      exp(-iota * t) * (1 - (1 - exp(-((exp(betaM_ann_iG * t) - 1)/betaM_ann_iG) * exp(alphaM_ann_iG + betaM_ann_iG * x_male_ann + deltaM_ad_ann_iG * log(ad) + deltaM_mo_ann_iG * mo))) * (1 - exp(-((exp(betaF_ann_iG * t) - 1)/betaF_ann_iG) * exp(alphaF_ann_iG + betaF_ann_iG * (x_male_ann - ad * mo + ad * (1 - mo)) + deltaF_ad_ann_iG * log(ad) + deltaF_mo_ann_iG * mo))))
+      exp(-iota * t) * (1 - (1 - exp(-((exp(betaM_ann_iG * t) - 1)/betaM_ann_iG) * exp(alphaM_ann_iG + betaM_ann_iG * (x_male_ann - (1 - mo) * ad) + deltaM_ad_ann_iG * log(ad) + deltaM_mo_ann_iG * mo))) * (1 - exp(-((exp(betaF_ann_iG * t) - 1)/betaF_ann_iG) * exp(alphaF_ann_iG + betaF_ann_iG * (x_male_ann - ad * mo) + deltaF_ad_ann_iG * log(ad) + deltaF_mo_ann_iG * mo))))
+    }
+    
+#    annuity = integrate(integrand, lower=0, upper=(120-min(x_male_ann, (x_male_ann - ad * mo + ad * (1 - mo)))))$value
+    annuity = integrate(integrand, lower=0, upper=100)$value
+    
+   return(annuity)
+  
+}
+
+ann_joint_indG <- function(iota, x_male_ann, ad, mo){
+
+    integrand <- function(t){
+#      exp(-iota * t - ((exp(betaM_ann_iG * t) - 1)/betaM_ann_iG) * exp(alphaM_ann_iG + betaM_ann_iG * x_male_ann + deltaM_ad_ann_iG * log(ad) + deltaM_mo_ann_iG * mo) - ((exp(betaF_ann_iG * t) - 1)/betaF_ann_iG) * exp(alphaF_ann_iG + betaF_ann_iG * (x_male_ann - ad * mo + ad * (1 - mo)) + deltaF_ad_ann_iG * log(ad) + deltaF_mo_ann_iG * mo)) 
+      exp(-iota * t - ((exp(betaM_ann_iG * t) - 1)/betaM_ann_iG) * exp(alphaM_ann_iG + betaM_ann_iG * (x_male_ann - (1 - mo) * ad) + deltaM_ad_ann_iG * log(ad) + deltaM_mo_ann_iG * mo) - ((exp(betaF_ann_iG * t) - 1)/betaF_ann_iG) * exp(alphaF_ann_iG + betaF_ann_iG * (x_male_ann - ad * mo) + deltaF_ad_ann_iG * log(ad) + deltaF_mo_ann_iG * mo)) 
+    }
+    
+    annuity = integrate(integrand, lower=0, upper=100)$value
+
+  return(annuity)
+}
+
+
+
+
+## - Function of interest rates, ad and mo (+1/0)
+ann_last <- function(iota, x_male_ann, ad, mo){
+  den_annuity = sum(pi_mw_ann * dnorm(log(ad), mean=zeta_AD_ann, sd=sqrt(var_AD_ann)) * (zeta_MO_ann^(mo)) * ((1 - zeta_MO_ann)^(1 - mo)))
+  annuity <- rep(0, K)
+  
+  for(k in 1:K){
+    integrand <- function(t){
+#      exp(-iota * t) * (1 - (1 - exp(-((exp(betaM_ann * t) - 1)/betaM_ann) * exp(alphaM_ann + betaM_ann * x_male_ann + gammaM_ann[k]))) * (1 - exp(-((exp(betaF_ann * t) - 1)/betaF_ann) * exp(alphaF_ann + betaF_ann * (x_male_ann - ad * mo + ad * (1 - mo)) + gammaF_ann[k]))))
+      exp(-iota * t) * (1 - (1 - exp(-((exp(betaM_ann * t) - 1)/betaM_ann) * exp(alphaM_ann + betaM_ann * (x_male_ann - (1 - mo) * ad) + gammaM_ann[k]))) * (1 - exp(-((exp(betaF_ann * t) - 1)/betaF_ann) * exp(alphaF_ann + betaF_ann * (x_male_ann - ad * mo) + gammaF_ann[k]))))
+    }
+    
+#    annuity[k] = integrate(integrand, lower=0, upper=(120-min(x_male_ann, (x_male_ann - ad * mo + ad * (1 - mo)))))$value * dnorm(log(ad), mean=zeta_AD_ann[k], sd=sqrt(var_AD_ann)) * (zeta_MO_ann[k]^(mo)) * ((1 - zeta_MO_ann[k])^(1 - mo))
+    annuity[k] = integrate(integrand, lower=0, upper=100)$value * dnorm(log(ad), mean=zeta_AD_ann[k], sd=sqrt(var_AD_ann)) * (zeta_MO_ann[k]^(mo)) * ((1 - zeta_MO_ann[k])^(1 - mo))
+  }
+  annuity_value <- sum(pi_mw_ann * annuity) / den_annuity
+  return(annuity_value)
+  
+}
+
+
+
+ann_joint <- function(iota, x_male_ann, ad, mo){
+  den_annuity = sum(pi_mw_ann * dnorm(log(ad), mean=zeta_AD_ann, sd=sqrt(var_AD_ann)) * (zeta_MO_ann^(mo)) * ((1 - zeta_MO_ann)^(1 - mo)))
+  annuity <- rep(0, K)
+  
+  for(k in 1:K){
+  integrand <- function(t){
+#    exp(-iota * t - ((exp(betaM_ann * t) - 1)/betaM_ann) * exp(alphaM_ann + betaM_ann * x_male_ann + gammaM_ann[k]) - ((exp(betaF_ann * t) - 1)/betaF_ann) * exp(alphaF_ann + betaF_ann * (x_male_ann - ad * mo + ad * (1 - mo)) + gammaF_ann[k])) 
+    exp(-iota * t - ((exp(betaM_ann * t) - 1)/betaM_ann) * exp(alphaM_ann + betaM_ann * (x_male_ann - (1 - mo) * ad) + gammaM_ann[k]) - ((exp(betaF_ann * t) - 1)/betaF_ann) * exp(alphaF_ann + betaF_ann * (x_male_ann - ad * mo) + gammaF_ann[k])) 
+  }
+  
+  annuity[k] = integrate(integrand, lower=0, upper=100)$value * dnorm(log(ad), mean=zeta_AD_ann[k], sd=sqrt(var_AD_ann)) * (zeta_MO_ann[k]^(mo)) * ((1 - zeta_MO_ann[k])^(1 - mo))
+  }
+  annuity_value <- sum(pi_mw_ann * annuity) / den_annuity
+  return(annuity_value)
+}
+
+## - Computations
+
+# - At maximum likelihood
+alphaM_ann_iG <- par_est_male_s_cov$estimate[1]
+alphaF_ann_iG <- par_est_female_s_cov$estimate[1]
+
+betaM_ann_iG <- par_est_male_s_cov$estimate[2]
+betaF_ann_iG <- par_est_female_s_cov$estimate[2]
+
+deltaM_ad_ann_iG <- par_est_male_s_cov$estimate[3]
+deltaF_ad_ann_iG <- par_est_female_s_cov$estimate[3]
+  
+deltaM_mo_ann_iG <- par_est_male_s_cov$estimate[4]
+deltaF_mo_ann_iG <- par_est_female_s_cov$estimate[4]
+
+
+# - At the posterior mean of the parameters
+alphaM_ann <- alpha_post_m[1]
+alphaF_ann <- alpha_post_m[2]
+
+betaM_ann <- beta_post_m[1]
+betaF_ann <- beta_post_m[2]
+
+gammaM_ann <- gamma_star_post_m_M
+gammaF_ann <- gamma_star_post_m_F
+
+pi_mw_ann <- pi_mw_post_m
+
+zeta_AD_ann <- z_star_ad_post_m
+zeta_MO_ann <- z_star_mo_post_m
+
+var_AD_ann <- z_ad_v_post_m
+
+age_ann <- c(60, 70)
+iota_ann <- c(0.01, 0.05)
+sequence <- seq(0.5,20,0.5)# c(seq(0.1,1,0.1), seq(1.5, 20, 0.5))# seq(0.5,20,0.5)
+
+# - produce annuity tables as continuum with respect to AD (understand the impact of dependence on joint and last survivor annuities)
+ann_J_tb_PH_i1_x60 <- matrix(NA, 2, length(sequence))
+ann_J_tb_AV_i1_x60 <- matrix(NA, 2, length(sequence))
+ann_L_tb_PH_i1_x60 <- matrix(NA, 2, length(sequence))
+ann_L_tb_AV_i1_x60 <- matrix(NA, 2, length(sequence))
+
+ann_J_tb_PH_i5_x60 <- matrix(NA, 2, length(sequence))
+ann_J_tb_AV_i5_x60 <- matrix(NA, 2, length(sequence))
+ann_L_tb_PH_i5_x60 <- matrix(NA, 2, length(sequence))
+ann_L_tb_AV_i5_x60 <- matrix(NA, 2, length(sequence))
+
+ann_J_tb_PH_i1_x70 <- matrix(NA, 2, length(sequence))
+ann_J_tb_AV_i1_x70 <- matrix(NA, 2, length(sequence))
+ann_L_tb_PH_i1_x70 <- matrix(NA, 2, length(sequence))
+ann_L_tb_AV_i1_x70 <- matrix(NA, 2, length(sequence))
+
+ann_J_tb_PH_i5_x70 <- matrix(NA, 2, length(sequence))
+ann_J_tb_AV_i5_x70 <- matrix(NA, 2, length(sequence))
+ann_L_tb_PH_i5_x70 <- matrix(NA, 2, length(sequence))
+ann_L_tb_AV_i5_x70 <- matrix(NA, 2, length(sequence))
+
+# - 1
+iota <- 0.01
+age <- 60
+
+col <- 1
+for(ad in sequence){
+  row <- 1
+  for(mo in c(1,0)){
+    ann_J_tb_PH_i1_x60[row,col] <- ann_joint_indG(iota, age, ad, mo)
+    ann_J_tb_AV_i1_x60[row,col] <- ann_joint(iota, age, ad, mo)
+    ann_L_tb_PH_i1_x60[row,col] <- ann_last_indG(iota, age, ad, mo)
+    ann_L_tb_AV_i1_x60[row,col] <- ann_last(iota, age, ad, mo)
+    row <- row + 1
+  }
+  col <- col + 1
+}
+
+# - 2
+iota <- 0.05
+
+col <- 1
+for(ad in sequence){
+  row <- 1
+  for(mo in c(1,0)){
+    ann_J_tb_PH_i5_x60[row,col] <- ann_joint_indG(iota, age, ad, mo)
+    ann_J_tb_AV_i5_x60[row,col] <- ann_joint(iota, age, ad, mo)
+    ann_L_tb_PH_i5_x60[row,col] <- ann_last_indG(iota, age, ad, mo)
+    ann_L_tb_AV_i5_x60[row,col] <- ann_last(iota, age, ad, mo)
+    row <- row + 1
+  }
+  col <- col + 1
+}
+
+# - 3
+iota <- 0.01
+age <- 70
+
+col <- 1
+for(ad in sequence){
+  row <- 1
+  for(mo in c(1,0)){
+    ann_J_tb_PH_i1_x70[row,col] <- ann_joint_indG(iota, age, ad, mo)
+    ann_J_tb_AV_i1_x70[row,col] <- ann_joint(iota, age, ad, mo)
+    ann_L_tb_PH_i1_x70[row,col] <- ann_last_indG(iota, age, ad, mo)
+    ann_L_tb_AV_i1_x70[row,col] <- ann_last(iota, age, ad, mo)
+    row <- row + 1
+  }
+  col <- col + 1
+}
+
+# - 4
+iota <- 0.05
+
+col <- 1
+for(ad in sequence){
+  row <- 1
+  for(mo in c(1,0)){
+    ann_J_tb_PH_i5_x70[row,col] <- ann_joint_indG(iota, age, ad, mo)
+    ann_J_tb_AV_i5_x70[row,col] <- ann_joint(iota, age, ad, mo)
+    ann_L_tb_PH_i5_x70[row,col] <- ann_last_indG(iota, age, ad, mo)
+    ann_L_tb_AV_i5_x70[row,col] <- ann_last(iota, age, ad, mo)
+    row <- row + 1
+  }
+  col <- col + 1
+}
+
+# - Percentage difference plots
+par(mfrow=c(2,2), mar = c(4.5,4,1,0.5))
+plot(sequence, 100 * (ann_J_tb_AV_i1_x60[1,] / ann_J_tb_PH_i1_x60[1,] - 1), type='l', xlab="Age difference", ylim=c(-12,3), ylab='Joint L. % Diff (Age 60)', lwd=2, main="iota=0.01")
+abline(h=0, lwd=0.5)
+lines(sequence, 100 * (ann_J_tb_AV_i1_x60[2,] / ann_J_tb_PH_i1_x60[2,] - 1), col='grey', lwd=2)
+legend('topright', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+
+plot(sequence, 100 * (ann_J_tb_AV_i5_x60[1,] / ann_J_tb_PH_i5_x60[1,] - 1), type='l', xlab="Age difference", ylim=c(-12,3), ylab='Joint L. % Diff (Age 60)', lwd=2, main="iota=0.05")
+abline(h=0, lwd=0.5)
+lines(sequence, 100 * (ann_J_tb_AV_i5_x60[2,] / ann_J_tb_PH_i5_x60[2,] - 1), col='grey', lwd=2)
+legend('topright', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+
+plot(sequence, 100 * (ann_J_tb_AV_i1_x70[1,] / ann_J_tb_PH_i1_x70[1,] - 1), type='l', xlab="Age difference", ylim=c(-12,3), ylab='Joint L. % Diff (Age 70)', lwd=2)
+abline(h=0, lwd=0.5)
+lines(sequence, 100 * (ann_J_tb_AV_i1_x70[2,] / ann_J_tb_PH_i1_x70[2,] - 1), col='grey', lwd=2)
+legend('topright', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+
+plot(sequence, 100 * (ann_J_tb_AV_i5_x70[1,] / ann_J_tb_PH_i5_x70[1,] - 1), type='l', xlab="Age difference", ylim=c(-12,3), ylab='Joint L. % Diff (Age 70)', lwd=2)
+abline(h=0, lwd=0.5)
+lines(sequence, 100 * (ann_J_tb_AV_i5_x70[2,] / ann_J_tb_PH_i5_x70[2,] - 1), col='grey', lwd=2)
+legend('topright', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+
+## - Last survivor annuity
+par(mfrow=c(2,2), mar = c(4.5,4,1,0.5))
+plot(sequence, 100 * (ann_L_tb_AV_i1_x60[1,] / ann_L_tb_PH_i1_x60[1,] - 1), type='l', xlab="Age difference", ylim=c(-4,20), ylab='Last s. % Diff (Age 60)', lwd=2, main="iota=0.01")
+abline(h=0, lwd=0.5)
+lines(sequence, 100 * (ann_L_tb_AV_i1_x60[2,] / ann_L_tb_PH_i1_x60[2,] - 1), col='grey', lwd=2)
+legend('topright', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+
+plot(sequence, 100 * (ann_L_tb_AV_i5_x60[1,] / ann_L_tb_PH_i5_x60[1,] - 1), type='l', xlab="Age difference", ylim=c(-4,20), ylab='Last s. % Diff (Age 60)', lwd=2, main="iota=0.05")
+abline(h=0, lwd=0.5)
+lines(sequence, 100 * (ann_L_tb_AV_i5_x60[2,] / ann_L_tb_PH_i5_x60[2,] - 1), col='grey', lwd=2)
+legend('topright', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+
+plot(sequence, 100 * (ann_L_tb_AV_i1_x70[1,] / ann_L_tb_PH_i1_x70[1,] - 1), type='l', xlab="Age difference", ylim=c(-4,20), ylab='Last s. % Diff (Age 70)', lwd=2)
+abline(h=0, lwd=0.5)
+lines(sequence, 100 * (ann_L_tb_AV_i1_x70[2,] / ann_L_tb_PH_i1_x70[2,] - 1), col='grey', lwd=2)
+legend('topright', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+
+plot(sequence, 100 * (ann_L_tb_AV_i5_x70[1,] / ann_L_tb_PH_i5_x70[1,] - 1), type='l', xlab="Age difference", ylim=c(-4,20), ylab='Last s. % Diff (Age 70)', lwd=2)
+abline(h=0, lwd=0.5)
+lines(sequence, 100 * (ann_L_tb_AV_i5_x70[2,] / ann_L_tb_PH_i5_x70[2,] - 1), col='grey', lwd=2)
+legend('topright', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+
+
+
+
+# - Annuity value plots
+par(mfrow=c(2,2), mar = c(4.5,4,1,0.5))
+plot(sequence, ann_J_tb_AV_i1_x60[1,], type='l', ylim=c(10,25), xlab="Age difference", ylab='Ann. f. (Age 60)', lwd=2, main="iota=0.01")
+lines(sequence, ann_J_tb_AV_i1_x60[2,], col='grey', lwd=2)
+lines(sequence, ann_J_tb_PH_i1_x60[1,], lwd=2, lty=2)
+lines(sequence, ann_J_tb_PH_i1_x60[2,], col='grey', lwd=2, lty=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+legend('topleft', legend=c("AVM", "PH"), lty=c(1,2), lwd=2, bty='n', cex=0.75)
+
+plot(sequence, ann_J_tb_AV_i5_x60[1,], type='l', ylim=c(5,15), xlab="Age difference", ylab='Ann. f. (Age 60)', lwd=2, main="iota=0.05")
+lines(sequence, ann_J_tb_AV_i5_x60[2,], col='grey', lwd=2)
+lines(sequence, ann_J_tb_PH_i5_x60[1,], lwd=2, lty=2)
+lines(sequence, ann_J_tb_PH_i5_x60[2,], col='grey', lwd=2, lty=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+legend('topleft', legend=c("AVM", "PH"), lty=c(1,2), lwd=2, bty='n', cex=0.75)
+
+plot(sequence, ann_J_tb_AV_i1_x70[1,], type='l', ylim=c(4,15), xlab="Age difference", ylab='Ann. f. (Age 70)', lwd=2)
+lines(sequence, ann_J_tb_AV_i1_x70[2,], col='grey', lwd=2)
+lines(sequence, ann_J_tb_PH_i1_x70[1,], lwd=2, lty=2)
+lines(sequence, ann_J_tb_PH_i1_x70[2,], col='grey', lwd=2, lty=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+legend('topleft', legend=c("AVM", "PH"), lty=c(1,2), lwd=2, bty='n', cex=0.75)
+
+plot(sequence,ann_J_tb_AV_i5_x70[1,], type='l', ylim=c(4,12), xlab="Age difference", ylab='Ann. f. (Age 70)', lwd=2)
+lines(sequence,ann_J_tb_AV_i5_x70[2,], col='grey', lwd=2)
+lines(sequence,ann_J_tb_PH_i5_x70[1,], lwd=2, lty=2)
+lines(sequence,ann_J_tb_PH_i5_x70[2,], col='grey', lwd=2, lty=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+legend('topleft', legend=c("AVM", "PH"), lty=c(1,2), lwd=2, bty='n', cex=0.75)
+
+par(mfrow=c(2,2), mar = c(4.5,4,1,0.5))
+plot(sequence,ann_L_tb_AV_i1_x60[1,], type='l', ylim=c(20,40), xlab="Age difference", ylab='Ann. f. (Age 60)', lwd=2, main="iota=0.01")
+lines(sequence,ann_L_tb_AV_i1_x60[2,], col='grey', lwd=2)
+lines(sequence,ann_L_tb_PH_i1_x60[1,], lwd=2, lty=2)
+lines(sequence,ann_L_tb_PH_i1_x60[2,], col='grey', lwd=2, lty=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+legend('topleft', legend=c("AVM", "PH"), lty=c(1,2), lwd=2, bty='n', cex=0.75)
+
+plot(sequence,ann_L_tb_AV_i5_x60[1,], type='l', ylim=c(14,20), xlab="Age difference", ylab='Ann. f. (Age 60)', lwd=2, main="iota=0.05")
+lines(sequence,ann_L_tb_AV_i5_x60[2,], col='grey', lwd=2)
+lines(sequence,ann_L_tb_PH_i5_x60[1,], lwd=2, lty=2)
+lines(sequence,ann_L_tb_PH_i5_x60[2,], col='grey', lwd=2, lty=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+legend('topleft', legend=c("AVM", "PH"), lty=c(1,2), lwd=2, bty='n', cex=0.75)
+
+plot(sequence,ann_L_tb_AV_i1_x70[1,], type='l', ylim=c(15,35), xlab="Age difference", ylab='Ann. f. (Age 70)', lwd=2)
+lines(sequence,ann_L_tb_AV_i1_x70[2,], col='grey', lwd=2)
+lines(sequence,ann_L_tb_PH_i1_x70[1,], lwd=2, lty=2)
+lines(sequence,ann_L_tb_PH_i1_x70[2,], col='grey', lwd=2, lty=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+legend('topleft', legend=c("AVM", "PH"), lty=c(1,2), lwd=2, bty='n', cex=0.75)
+
+plot(sequence,ann_L_tb_AV_i5_x70[1,], type='l', ylim=c(11,17), xlab="Age difference", ylab='Ann. f. (Age 70)', lwd=2)
+lines(sequence,ann_L_tb_AV_i5_x70[2,], col='grey', lwd=2)
+lines(sequence,ann_L_tb_PH_i5_x70[1,], lwd=2, lty=2)
+lines(sequence,ann_L_tb_PH_i5_x70[2,], col='grey', lwd=2, lty=2)
+legend('bottomleft', legend=c("MO=1", "MO=0"), col=c('black', 'grey'), lwd=2, bty='n', cex=0.75)
+legend('topleft', legend=c("AVM", "PH"), lty=c(1,2), lwd=2, bty='n', cex=0.75)
+
+
+
+ad_mo_tb <- matrix(NA, 6, 2)
+ad_mo_tb[1,] <- c(2, 0)
+ad_mo_tb[2,] <- c(2, 1)
+ad_mo_tb[3,] <- c(5, 0)
+ad_mo_tb[4,] <- c(5, 1)
+ad_mo_tb[5,] <- c(10, 0)
+ad_mo_tb[6,] <- c(10, 1)
+
+age_count <- 1
+admo_count <- 1
+iota_count <- 1
+
+annuity_table <- matrix(NA, 12, 8)
+
+# - age = 60
+## - iota = 0.01
+for(admo in 1:6){
+  annuity_table[admo,1] <- ann_joint(0.01, 60, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo,2] <- ann_joint_indG(0.01, 60, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo,3] <- ann_joint(0.05, 60, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo,4] <- ann_joint_indG(0.05, 60, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo,5] <- ann_joint(0.01, 70, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo,6] <- ann_joint_indG(0.01, 70, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo,7] <- ann_joint(0.05, 70, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo,8] <- ann_joint_indG(0.05, 70, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+
+  annuity_table[admo + 6,1] <- ann_last(0.01, 60, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo + 6,2] <- ann_last_indG(0.01, 60, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo + 6,3] <- ann_last(0.05, 60, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo + 6,4] <- ann_last_indG(0.05, 60, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo + 6,5] <- ann_last(0.01, 70, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo + 6,6] <- ann_last_indG(0.01, 70, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo + 6,7] <- ann_last(0.05, 70, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  annuity_table[admo + 6,8] <- ann_last_indG(0.05, 70, ad_mo_tb[admo,1], ad_mo_tb[admo,2])
+  
+}
+
+xtable(annuity_table, digits = c(0,2,2,2,2,2,2,2,2))
+
+ann_joint(0.01, 65, 2, 1)
+ann_joint_indG(0.01, 65, 2, 1)
+
+
+ann_last(0.01, 65, 2, 1)
+ann_last_indG(0.01, 65, 2, 1)
