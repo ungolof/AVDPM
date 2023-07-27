@@ -387,8 +387,7 @@ for(i in i:n_iter){
   print(paste(i, "% iteration"))
   
   if(i %in% seq(5000, n_iter, 5000)){
-    save.image("~/Desktop/AVM/Resume_March2023/Canlif_MCMC_v0_nxb_2ndRUN.RData")
-    #save.image("C:/Users/z3532149/Desktop/LFCR/AugmentedVM/Canlif_MCMC.RData")
+    save.image("~/Desktop/AVM/Canlif_MCMC.RData")
   }
   
 }
