@@ -259,9 +259,9 @@ for(i in i:n_iter){
   
   # - Step 4: Sample gamma*
   ga_k_pos <- c(1:M)
-  log_sum_Si <- rep(0, K)
   
   for(k in 1:K){
+    log_sum_Si <- 0
     N_k[k] <- sum(ifelse(S_unit==k,1,0)) # number of people with the same k - or within the same cluster
     
     # - Sample gamma* using the Adaptive Metropolis Hastings of Vihola (2012)
@@ -269,13 +269,13 @@ for(i in i:n_iter){
     gamma_proposed <- matrix(gamma_star[i-1,ga_k_pos],M,1) + Sigma_ch_ga[, ((k-1) * M + 1):(k * M)] %*% matrix(r_i, M,1)
     
     # - Get likelihood of the data conditional to the clustering variable S_i
-    log_sum_Si[k] <- log_sum_Si[k] - dmvnorm(t(gamma_proposed), mean = gamma_star[i-1,ga_k_pos], sigma = Sigma_ga[, ((k-1) * M + 1):(k * M)], log = TRUE) +
-                                     dmvnorm(t(gamma_proposed), mean = rep(0,M), sigma = matrix(Sigma_gamma[i-1,], M,M), log = TRUE) + # this line corresponds to the prior
-                                     dmvnorm(gamma_star[i-1,ga_k_pos], mean = t(gamma_proposed), sigma = Sigma_ga[, ((k-1) * M + 1):(k * M)], log = TRUE) -
-                                     dmvnorm(gamma_star[i-1,ga_k_pos], mean = rep(0,M), sigma = matrix(Sigma_gamma[i-1,], M,M), log = TRUE) # this line corresponds to the prior
+    log_sum_Si <- log_sum_Si - dmvnorm(t(gamma_proposed), mean = gamma_star[i-1,ga_k_pos], sigma = Sigma_ga[, ((k-1) * M + 1):(k * M)], log = TRUE) +
+                               dmvnorm(t(gamma_proposed), mean = rep(0,M), sigma = matrix(Sigma_gamma[i-1,], M,M), log = TRUE) + # this line corresponds to the prior
+                               dmvnorm(gamma_star[i-1,ga_k_pos], mean = t(gamma_proposed), sigma = Sigma_ga[, ((k-1) * M + 1):(k * M)], log = TRUE) -
+                               dmvnorm(gamma_star[i-1,ga_k_pos], mean = rep(0,M), sigma = matrix(Sigma_gamma[i-1,], M,M), log = TRUE) # this line corresponds to the prior
     
-    log_sum_Si[k] <- log_sum_Si[k] + sum(ifelse(S_unit==k, (- exp(alpha[i,1] + beta[i,1] * X$male  ) * (exp(beta[i,1] * (t_i + a_i)) - exp(beta[i,1] * a_i)) / beta[i,1]) * (exp(gamma_proposed[1]) - exp(gamma_star[i-1,ga_k_pos[1]])) + 
-                                                           (- exp(alpha[i,2] + beta[i,2] * X$female) * (exp(beta[i,2] * (t_i + a_i)) - exp(beta[i,2] * a_i)) / beta[i,2]) * (exp(gamma_proposed[2]) - exp(gamma_star[i-1,ga_k_pos[2]])) + d_ci$male * (gamma_proposed[1] - gamma_star[i-1,ga_k_pos[1]]) + d_ci$female * (gamma_proposed[2] - gamma_star[i-1,ga_k_pos[2]]), 0))
+    log_sum_Si <- log_sum_Si + sum(ifelse(S_unit==k, (- exp(alpha[i,1] + beta[i,1] * X$male  ) * (exp(beta[i,1] * (t_i + a_i)) - exp(beta[i,1] * a_i)) / beta[i,1]) * (exp(gamma_proposed[1]) - exp(gamma_star[i-1,ga_k_pos[1]])) + 
+                                                     (- exp(alpha[i,2] + beta[i,2] * X$female) * (exp(beta[i,2] * (t_i + a_i)) - exp(beta[i,2] * a_i)) / beta[i,2]) * (exp(gamma_proposed[2]) - exp(gamma_star[i-1,ga_k_pos[2]])) + d_ci$male * (gamma_proposed[1] - gamma_star[i-1,ga_k_pos[1]]) + d_ci$female * (gamma_proposed[2] - gamma_star[i-1,ga_k_pos[2]]), 0))
     
     # Acceptance step
     accept_i <- min(1, exp(log_sum_Si))
